@@ -692,7 +692,6 @@ if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     if check_emergency(user_input):
-        # Clean emergency response without HTML tags
         emergency_response = """🚨 **EMERGENCY ALERT** 🚨
 
 Your symptoms may require immediate medical attention. Call emergency services now:
