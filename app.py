@@ -737,7 +737,6 @@ st.markdown("""
     }
 }
 </style>
-# DISCLAIMER FOOTER
 <div class="disclaimer-box">
     ⚠️ This assistant is for informational purposes only and does not constitute medical advice. Always consult a qualified healthcare provider.
 </div>
