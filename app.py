@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for clean ChatGPT-like styling with fixed sidebar
+# CUSTOM CSS (styling for app, chat, sidebar, etc.)
 st.markdown("""
 <style>
     .main-header {
@@ -28,7 +28,6 @@ st.markdown("""
         margin-left: 0 !important;
     }
     
-    /* Force sidebar to always be visible and prevent collapsing */
     section[data-testid="stSidebar"] {
         display: block !important;
         visibility: visible !important;
@@ -59,7 +58,6 @@ st.markdown("""
         transition: none !important;
     }
     
-    /* Hide ALL possible sidebar toggle buttons */
     .stButton[data-testid="baseButton-header"] {
         display: none !important;
     }
@@ -83,8 +81,7 @@ st.markdown("""
     .css-1cypcdb {
         display: none !important;
     }
-    
-    /* Prevent any sidebar animations or transitions */
+
     section[data-testid="stSidebar"], 
     section[data-testid="stSidebar"] *,
     .css-1d391kg,
@@ -93,7 +90,6 @@ st.markdown("""
         animation: none !important;
     }
     
-    /* Ensure main content adjusts for fixed sidebar */
     .main .block-container {
         margin-left: 0 !important;
         max-width: none !important;
@@ -236,7 +232,6 @@ st.markdown("""
         border: 1px solid #e9ecef;
     }
     
-    /* Hide Streamlit default elements */
     .stDeployButton {
         display: none;
     }
@@ -327,6 +322,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Configure Gemini API
+# Function to get API key
 def get_api_key():
     api_key = os.getenv('GEMINI_API_KEY')
     if api_key:
@@ -345,6 +341,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # Initialize the Gemini model
 @st.cache_resource
 def initialize_gemini_model():
+    # Try multiple Gemini models until one works
     try:
         model_names = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro', 'gemini-pro']
         
@@ -361,8 +358,7 @@ def initialize_gemini_model():
     except Exception as e:
         st.error(f"Failed to initialize Gemini model: {str(e)}")
         return None
-
-# IMPROVED Health Assistant Prompt - More comprehensive and flexible
+# BASE PROMPT FOR HEALTH ASSISTANT
 HEALTH_ASSISTANT_PROMPT = """
 You are Dr. HealthBot, a knowledgeable and friendly virtual health assistant. Your role is to provide helpful, accurate health information while being conversational and supportive.
 
@@ -429,11 +425,11 @@ if 'messages' not in st.session_state:
 if 'user_profile' not in st.session_state:
     st.session_state.user_profile = {}
 
-# IMPROVED EMERGENCY DETECTION FUNCTION
+# EMERGENCY DETECTION FUNCTION
 def check_emergency(text):
+    # Detect emergency phrases and situations
     text_lower = text.lower().strip()
     
-    # Question patterns that should NOT trigger emergency
     question_patterns = [
         'what is', 'what are', 'tell me about', 'explain', 'information about',
         'how to', 'why does', 'causes of', 'symptoms of', 'definition of',
@@ -482,7 +478,7 @@ def check_emergency(text):
     
     return has_personal_indicator and has_emergency_keyword
 
-# Function to classify message type - SIMPLIFIED AND IMPROVED
+# Function to classify message type 
 def classify_message_type(message):
     message_lower = message.lower().strip()
     
@@ -549,7 +545,7 @@ def get_ai_response(user_input):
     except Exception as e:
         return f"I'm having trouble connecting right now. Please try again later. Error: {str(e)}"
 
-# Fixed sidebar - always visible
+# SIDEBAR CONFIGURATION
 with st.sidebar:
     st.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
     
@@ -688,14 +684,13 @@ for message in st.session_state.messages:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Chat input at the bottom
+# USER INPUT AND RESPONSE HANDLING
 user_input = st.chat_input("Ask me anything about health, symptoms, diet, exercise, or wellness...")
 
 if user_input:
-    # Add user message
+   
     st.session_state.messages.append({"role": "user", "content": user_input})
-    
-    # Check for emergency with improved detection
+
     if check_emergency(user_input):
         # Clean emergency response without HTML tags
         emergency_response = """🚨 **EMERGENCY ALERT** 🚨
@@ -719,10 +714,9 @@ If you're experiencing severe symptoms like chest pain, difficulty breathing, or
     
     st.rerun()
 
-# Remove extra bottom space
+
 st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
-# Fixed disclaimer at the bottom
 st.markdown("""
 <style>
 .disclaimer-box {
@@ -744,6 +738,7 @@ st.markdown("""
     }
 }
 </style>
+# DISCLAIMER FOOTER
 <div class="disclaimer-box">
     ⚠️ This assistant is for informational purposes only and does not constitute medical advice. Always consult a qualified healthcare provider.
 </div>
